@@ -1,0 +1,14 @@
+# Generated renderings are retained with the submission but exceed GitHub's
+# normal per-file limit. The reproducible event evidence is committed instead.
+annotated_*.mp4
+
+# Local Python and tool caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS metadata
+.DS_Store

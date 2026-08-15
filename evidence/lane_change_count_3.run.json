@@ -1,0 +1,58 @@
+{
+  "device": "cpu",
+  "elapsed_s": 237.08963958302047,
+  "events": [
+    {
+      "confirm_frame": 432,
+      "confirm_time_s": 14.40360137195122,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 411,
+      "target_lane_id": "lane-2",
+      "track_id": 29
+    },
+    {
+      "confirm_frame": 847,
+      "confirm_time_s": 28.240394356580286,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-2",
+      "start_frame": 826,
+      "target_lane_id": "lane-1",
+      "track_id": 51
+    }
+  ],
+  "input_basename": "lane_change_count_3.mp4",
+  "peak_rss_bytes": 1232928768,
+  "provenance": {
+    "config_sha256": "8c27966f1970f1b550e400b822011d3b7f2ff7d279043de4e9a4972f1bb14518",
+    "model_id": "yolo11n",
+    "numpy_version": "2.4.6",
+    "opencv_version": "4.14.0.94",
+    "package_version": "0.1.0",
+    "pipeline_schema_version": "1",
+    "psutil_version": "7.2.2",
+    "python_version": "3.11.15",
+    "supervision_version": "0.30.0",
+    "torch_version": "2.13.0",
+    "ultralytics_version": "8.4.115",
+    "weight_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+  },
+  "status": "success",
+  "thresholds": {
+    "detector_confidence": 0.25,
+    "detector_image_size": 960,
+    "detector_iou": 0.7,
+    "direction_tolerance_deg": 20.0,
+    "edge_exit_min_target_observations": 4,
+    "edge_exit_target_stable_s": 0.1,
+    "geometry_sample_count": 41,
+    "lane_change_direction_tolerance_deg": 45.0,
+    "max_gap_s": 0.4,
+    "min_lateral_lane_widths": 0.55,
+    "min_track_s": 1.2,
+    "origin_stable_s": 0.6,
+    "target_majority": 0.7,
+    "target_stable_s": 0.7
+  },
+  "warnings": []
+}

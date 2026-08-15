@@ -1,0 +1,24 @@
+{
+  "events": [
+    {
+      "confirm_frame": 432,
+      "confirm_time_s": 14.40360137195122,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 411,
+      "target_lane_id": "lane-2",
+      "track_id": 29
+    },
+    {
+      "confirm_frame": 847,
+      "confirm_time_s": 28.240394356580286,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-2",
+      "start_frame": 826,
+      "target_lane_id": "lane-1",
+      "track_id": 51
+    }
+  ],
+  "input_basename": "lane_change_count_3.mp4",
+  "total_lane_changes": 2
+}

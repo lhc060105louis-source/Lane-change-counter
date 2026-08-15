@@ -1,0 +1,85 @@
+{
+  "device": "cpu",
+  "elapsed_s": 209.14102129096864,
+  "events": [
+    {
+      "confirm_frame": 191,
+      "confirm_time_s": 6.366666666666666,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 170,
+      "target_lane_id": "lane-2",
+      "track_id": 21
+    },
+    {
+      "confirm_frame": 308,
+      "confirm_time_s": 10.266666666666667,
+      "confirmation": "edge_exit",
+      "origin_lane_id": "lane-2",
+      "start_frame": 305,
+      "target_lane_id": "lane-1",
+      "track_id": 21
+    },
+    {
+      "confirm_frame": 451,
+      "confirm_time_s": 15.033333333333333,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 428,
+      "target_lane_id": "lane-2",
+      "track_id": 31
+    },
+    {
+      "confirm_frame": 559,
+      "confirm_time_s": 18.633333333333333,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 538,
+      "target_lane_id": "lane-2",
+      "track_id": 32
+    },
+    {
+      "confirm_frame": 708,
+      "confirm_time_s": 23.6,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 680,
+      "target_lane_id": "lane-2",
+      "track_id": 38
+    }
+  ],
+  "input_basename": "lane_change_count_2.mp4",
+  "peak_rss_bytes": 1181368320,
+  "provenance": {
+    "config_sha256": "8c27966f1970f1b550e400b822011d3b7f2ff7d279043de4e9a4972f1bb14518",
+    "model_id": "yolo11n",
+    "numpy_version": "2.4.6",
+    "opencv_version": "4.14.0.94",
+    "package_version": "0.1.0",
+    "pipeline_schema_version": "1",
+    "psutil_version": "7.2.2",
+    "python_version": "3.11.15",
+    "supervision_version": "0.30.0",
+    "torch_version": "2.13.0",
+    "ultralytics_version": "8.4.115",
+    "weight_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+  },
+  "status": "success",
+  "thresholds": {
+    "detector_confidence": 0.25,
+    "detector_image_size": 960,
+    "detector_iou": 0.7,
+    "direction_tolerance_deg": 20.0,
+    "edge_exit_min_target_observations": 4,
+    "edge_exit_target_stable_s": 0.1,
+    "geometry_sample_count": 41,
+    "lane_change_direction_tolerance_deg": 45.0,
+    "max_gap_s": 0.4,
+    "min_lateral_lane_widths": 0.55,
+    "min_track_s": 1.2,
+    "origin_stable_s": 0.6,
+    "target_majority": 0.7,
+    "target_stable_s": 0.7
+  },
+  "warnings": []
+}

@@ -1,0 +1,51 @@
+{
+  "events": [
+    {
+      "confirm_frame": 191,
+      "confirm_time_s": 6.366666666666666,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 170,
+      "target_lane_id": "lane-2",
+      "track_id": 21
+    },
+    {
+      "confirm_frame": 308,
+      "confirm_time_s": 10.266666666666667,
+      "confirmation": "edge_exit",
+      "origin_lane_id": "lane-2",
+      "start_frame": 305,
+      "target_lane_id": "lane-1",
+      "track_id": 21
+    },
+    {
+      "confirm_frame": 451,
+      "confirm_time_s": 15.033333333333333,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 428,
+      "target_lane_id": "lane-2",
+      "track_id": 31
+    },
+    {
+      "confirm_frame": 559,
+      "confirm_time_s": 18.633333333333333,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 538,
+      "target_lane_id": "lane-2",
+      "track_id": 32
+    },
+    {
+      "confirm_frame": 708,
+      "confirm_time_s": 23.6,
+      "confirmation": "stable",
+      "origin_lane_id": "lane-3",
+      "start_frame": 680,
+      "target_lane_id": "lane-2",
+      "track_id": 38
+    }
+  ],
+  "input_basename": "lane_change_count_2.mp4",
+  "total_lane_changes": 5
+}

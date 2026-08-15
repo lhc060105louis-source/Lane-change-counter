@@ -70,9 +70,11 @@ uv run python run.py --input-dir /path/to/videos --output-dir output --device au
 ```
 
 Each successful input produces `annotated_<input>.mp4`, `<input>.events.json`,
-and `<input>.run.json`. The aggregate `answer.json` is produced only for a
-fully successful, non-geometry-only directory batch. Use `--geometry-only` to
-emit a geometry diagnostic without running detection and counting.
+and `<input>.run.json`. A successful, non-geometry-only single-video run
+writes a one-entry `answer.json`. In directory mode, the aggregate
+`answer.json` is produced only when every input succeeds and the run is not
+geometry-only. Use `--geometry-only` to emit a geometry diagnostic without
+running detection and counting.
 
 ## Results and evidence
 
@@ -119,7 +121,6 @@ assigned a count.
 run.py                    CLI entry point for one MP4 or a directory of MP4s
 lane_change_counter/      Geometry, detection, tracking, assignment, FSM, and reporting
 scripts/fetch_weights.py  Locked-weight fetch and SHA-256 verification helper
-tests/                    Automated unit and integration coverage
 evidence/                 Committed event logs and run provenance for submitted outputs
 answer.json               Submitted per-video lane-change totals
 weights.lock.json         YOLO11n source, SHA-256, and expected size

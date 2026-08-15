@@ -70,9 +70,9 @@ uv run python run.py --input-dir /path/to/videos --output-dir output --device au
 ```
 
 Each successful input produces `annotated_<input>.mp4`, `<input>.events.json`,
-and `<input>.run.json`; the output directory also receives an updated
-`answer.json`. Use `--geometry-only` to emit a geometry diagnostic without
-running detection and counting.
+and `<input>.run.json`. When a directory batch completes successfully, the
+output directory also receives an updated `answer.json`. Use `--geometry-only`
+to emit a geometry diagnostic without running detection and counting.
 
 ## Results and evidence
 

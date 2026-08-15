@@ -1,88 +1,127 @@
 # Lane Change Counter
 
-This submission contains one standalone computer-vision pipeline for counting
-completed vehicle lane changes in an input MP4.  The same code and default
-parameters are used for every video; the pipeline does not branch on a file
-name, read `answer.json`, or contain video-specific event frames, tracks, or
-lane coordinates.
+## Why this project
 
-## Requirements and setup
+Lane-change counting looks simple until vehicle occlusion, perspective, road
+geometry, and brief boundary contacts turn a visual impression into an
+ambiguous event. This project implements a reproducible computer-vision
+pipeline that counts *completed* lane changes in MP4 traffic footage. One
+pipeline and one set of default parameters are applied uniformly to MP4 inputs:
+the code does not branch on file names, read `answer.json`, or encode
+video-specific lanes, tracks, or event frames.
 
-- Python 3.11
-- [uv](https://docs.astral.sh/uv/)
-- The locked `yolo11n.pt` model weight described by `weights.lock.json`
+The repository is structured as a small research-engineering artifact: it
+separates scene understanding from event logic, records provenance with each
+run, and keeps machine-readable evidence beside the submitted counts.
 
-Create the locked environment from this directory:
+## Method at a glance
+
+For each video, the pipeline:
+
+1. Decodes a representative set of frames and estimates scene geometry,
+   including travel-lane polygons, adjacency, direction, and excluded non-road
+   regions.
+2. Detects vehicles with the locked YOLO11n model and maintains identities with
+   ByteTrack.
+3. Assigns each tracked vehicle's bottom-center contact point to an inferred
+   lane, then temporally smooths assignments to suppress transient labels near
+   lane boundaries.
+4. Runs a deterministic finite-state confirmation rule per track, recording
+   only sustained transitions between adjacent, same-direction travel lanes.
+
+The result is an event log rather than a frame-by-frame heuristic count. A
+run that cannot establish reliable geometry produces diagnostic evidence
+instead of inventing a zero count.
+
+## Reproduce the pipeline
+
+Requirements: Python 3.11 and [uv](https://docs.astral.sh/uv/). The project
+declares its runtime and development tools in `pyproject.toml`; `uv.lock`
+pins the resolved environment.
+
+Create the environment:
 
 ```bash
 uv sync
 ```
 
-Fetch and verify the required model weight (internet access is required for
-this one-time step):
+Fetch and integrity-check the required model once (internet access required):
 
 ```bash
 uv run python scripts/fetch_weights.py
 ```
 
-The script stores the weight in the platform cache and verifies its SHA-256
-against `weights.lock.json`.  No credentials are required.  CPU inference is
-the portable default; `--device auto` also uses MPS when it is available and
-falls back safely to CPU if necessary.
+`weights.lock.json` locks the model to `yolo11n`, including its download URL,
+SHA-256 (`0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1`),
+and size (5,613,764 bytes). The fetch script stores the weight in the platform
+cache and verifies that hash. CPU is the portable default; `--device auto`
+uses MPS when available and otherwise falls back to CPU.
 
-## Run the pipeline
-
-Run one video:
+Process one MP4:
 
 ```bash
 uv run python run.py --input /path/to/input.mp4 --output-dir output --device auto --overwrite
 ```
 
-Run all MP4 files directly inside a directory:
+Process all direct-child MP4 files in a directory:
 
 ```bash
 uv run python run.py --input-dir /path/to/videos --output-dir output --device auto --overwrite
 ```
 
-For each input the pipeline:
+Each successful input produces `annotated_<input>.mp4`, `<input>.events.json`,
+and `<input>.run.json`; the output directory also receives an updated
+`answer.json`. Use `--geometry-only` to emit a geometry diagnostic without
+running detection and counting.
 
-1. estimates scene geometry from the decoded frames;
-2. detects vehicles with YOLO11n and tracks them with ByteTrack;
-3. assigns track contact points to automatically inferred, adjacent travel
-   lanes and uses temporal smoothing plus a finite-state rule to confirm only
-   completed lane changes; and
-4. writes an event log, run provenance, updated `answer.json`, and an
-   annotated video from the pipeline's own detections, assignments, and
-   confirmed events.
+## Results and evidence
 
-If geometry or inference is unreliable, the pipeline fails rather than
-inventing a zero count.  The annotated video shows inferred lanes, vehicle
-tracks and lane assignments, recently confirmed events, a running count, and
-the final total.  It is generated directly from the finalized pipeline
-records; it is not manually edited after inference.
+The committed `answer.json` records the pipeline output for the supplied
+videos:
 
-## Submitted results
+| Input | Completed lane changes |
+| --- | ---: |
+| `lane_change_count.mp4` | 2 |
+| `lane_change_count_2.mp4` | 5 |
+| `lane_change_count_3.mp4` | 2 |
 
-`answer.json` reports the counts generated for the three supplied videos. The
-adjacent `*.events.json` and `*.run.json` files provide machine-readable event
-evidence and provenance (including the applied thresholds, package versions,
-weight hash, and actual device). The locally generated `annotated_*.mp4`
-renderings are intentionally not committed because each exceeds GitHub's
-normal per-file size limit.
+For every result, committed `evidence/*.events.json` files list confirmed
+events with track IDs, origin and target lanes, frames, timestamps, and
+confirmation type. The paired `evidence/*.run.json` files capture run status,
+applied thresholds, package versions, the model ID and weight hash, device,
+and resource/runtime provenance.
 
-Counting convention: a lane change is recorded only after a tracked vehicle
-moves between adjacent travel lanes in the same direction and satisfies the
-pipeline's temporal confirmation rule.  In-lane motion, short boundary
-contacts, grid/non-road regions, and joining traffic are excluded.  The narrow
-edge-exit confirmation rule is documented in the emitted event metadata and
-only applies when a vehicle has demonstrated a transition into the adjacent
-lane immediately before it leaves the frame.
+The annotated MP4 renderings are local, size-excluded outputs and are not
+committed. They are generated directly from finalized detections, assignments,
+and confirmed events; they visualize inferred lanes, vehicle tracks and lane
+assignments, recent confirmations, the running count, and the final total.
 
-## Included files
+## Scope and decision rule
 
-- `run.py`, `lane_change_counter/`, and `scripts/fetch_weights.py`: pipeline
-  and required helper code.
-- `pyproject.toml` and `uv.lock`: reproducible environment definition.
-- `weights.lock.json`: required model identifier, source, and integrity hash.
-- `answer.json`, `*.events.json`, and `*.run.json`: generated submission
-  results and machine-readable evidence.
+A counted event requires a tracked vehicle to establish an origin lane, move
+far enough laterally into an adjacent same-direction lane, and remain in that
+target lane long enough to satisfy temporal confirmation. The pipeline
+therefore excludes in-lane motion, short boundary contacts, transitions
+through excluded grid or non-road regions, and joining traffic. A narrow
+edge-exit rule can confirm an event only after the track has already shown the
+required transition into the adjacent lane; its outcome is marked in the event
+evidence.
+
+This is a lane-change counter for compatible traffic footage, not a general
+traffic analytics system. Its geometry estimation and conservative decision
+rule are designed to make outputs inspectable and reproducible; footage with
+insufficient persistent lane evidence is reported diagnostically rather than
+assigned a count.
+
+## Repository layout
+
+```text
+run.py                    CLI entry point for one MP4 or a directory of MP4s
+lane_change_counter/      Geometry, detection, tracking, assignment, FSM, and reporting
+scripts/fetch_weights.py  Locked-weight fetch and SHA-256 verification helper
+tests/                    Automated unit and integration coverage
+evidence/                 Committed event logs and run provenance for submitted outputs
+answer.json               Submitted per-video lane-change totals
+weights.lock.json         YOLO11n source, SHA-256, and expected size
+pyproject.toml, uv.lock   Python 3.11 project metadata and locked environment
+```

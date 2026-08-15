@@ -12,3 +12,6 @@ __pycache__/
 
 # OS metadata
 .DS_Store
+
+# Short-lived isolated worktrees used during automated task execution
+.worktrees/
